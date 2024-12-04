@@ -1,9 +1,24 @@
-const getHistory = (req, res, next) => {
-  res.send("Get History");
+const {
+  getUserHistory,
+  postUserHistory,
+} = require("../service/history-service");
+
+const getHistory = async (req, res, next) => {
+  try {
+    const data = await getUserHistory();
+    res.send(data);
+  } catch (error) {
+    res.sendStatus(500) && next(error);
+  }
 };
 
-const postHistory = (req, res, next) => {
-  res.send("Post History");
+const postHistory = async (req, res, next) => {
+  try {
+    const data = await postUserHistory();
+    res.send(data);
+  } catch (error) {
+    res.sendStatus(500) && next(error);
+  }
 };
 
 module.exports = { getHistory, postHistory };

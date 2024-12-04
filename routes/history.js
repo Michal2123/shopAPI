@@ -4,9 +4,10 @@ const {
   getHistory,
   postHistory,
 } = require("../controllers/history-controller");
+const veryfiToken = require("../middleware/veryfi-token");
 
-router.get("/", getHistory);
+router.get("/", veryfiToken, getHistory);
 
-router.post("/", postHistory);
+router.post("/", veryfiToken, postHistory);
 
 module.exports = router;
