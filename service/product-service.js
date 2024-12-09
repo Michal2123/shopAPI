@@ -1,6 +1,12 @@
+const selectProductsDB = require("../db/products-db");
+
 const getAllProducts = async () => {
-  await setTimeout(() => {}, 1000);
-  return "All products";
+  try {
+    const data = await selectProductsDB();
+    return data;
+  } catch (error) {
+    throw error;
+  }
 };
 
 module.exports = getAllProducts;

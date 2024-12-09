@@ -23,7 +23,7 @@ const createToken = (userId) => {
   const token = jwt.sign({ userId }, accessTokenSecret, {
     expiresIn: "1h",
   });
-  return { token };
+  return token;
 };
 
 module.exports = { encryptData, decryptData, createToken };

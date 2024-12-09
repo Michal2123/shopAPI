@@ -8,6 +8,9 @@ const createErrorMessage = (status) => {
     case 401:
       message = "Unauthorized";
       break;
+    case 403:
+      message = "Already Exists";
+      break;
     case 404:
       message = "Not Found";
       break;
@@ -27,11 +30,11 @@ const createErrorMessage = (status) => {
   return message;
 };
 
+//Middlewere for error handling
 const errorHandler = (err, req, res, next) => {
-  console.log(err);
-  res.status(err.status);
-  if (!err.message) return res.send(createErrorMessage(err.status));
-  res.send(err.message);
+  console.log(`error-handler: ${err}`);
+  if (!err.message) err.message = createErrorMessage(err.status);
+  res.sendStatus(err.status) && next(err);
 };
 
 module.exports = errorHandler;

@@ -6,8 +6,10 @@ const {
   registerJSONVerify,
 } = require("../middleware/veryfi-json");
 
+//Route for login user
 router.post("/login", loginJSONVeryfi, postLogin);
 
+//Route for register user
 router.post("/register", registerJSONVerify, postRegister);
 
 module.exports = router;
