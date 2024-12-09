@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const createError = require("http-errors");
 const bodyParser = require("body-parser");
 const authRoute = require("./routes/auth");
@@ -10,10 +11,17 @@ const { port } = require("./config");
 const errorHandler = require("./middleware/error-handler");
 
 const app = express();
-var jsonParser = bodyParser.json();
+const jsonParser = bodyParser.json();
+
+const corsOptions = {
+  origin: "*",
+  credentials: true,
+  optionSuccessStatus: 200,
+};
 
 //Middlewere
 app.use(jsonParser);
+app.use(cors(corsOptions));
 
 //Routes
 app.use("/auth", authRoute);
@@ -27,10 +35,6 @@ app.use((req, res, next) => {
 });
 
 app.use(errorHandler);
-
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

@@ -2,11 +2,12 @@ const Ajv = require("ajv");
 
 const ajv = new Ajv();
 
+//Schema for user login JSON
 const loginSchema = {
   type: "object",
-  required: ["login", "password"],
+  required: ["email", "password"],
   properties: {
-    login: {
+    email: {
       type: "string",
     },
     password: {
@@ -17,9 +18,18 @@ const loginSchema = {
   },
 };
 
+//Schema for user registration JSON
 const registerSchema = {
   type: "object",
-  required: ["email", "password", "name", "city", "zipCode", "street"],
+  required: [
+    "email",
+    "password",
+    "firstName",
+    "lastName",
+    "city",
+    "zipCode",
+    "address",
+  ],
   properties: {
     email: {
       type: "string",
@@ -27,7 +37,10 @@ const registerSchema = {
     password: {
       type: "string",
     },
-    name: {
+    firstName: {
+      type: "string",
+    },
+    lastName: {
       type: "string",
     },
     city: {
@@ -36,7 +49,7 @@ const registerSchema = {
     zipCode: {
       type: "string",
     },
-    street: {
+    address: {
       type: "string",
     },
     additionalProperties: false,

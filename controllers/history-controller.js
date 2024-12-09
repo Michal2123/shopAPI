@@ -3,21 +3,31 @@ const {
   postUserHistory,
 } = require("../service/history-service");
 
+//Controller for get all user order history
 const getHistory = async (req, res, next) => {
   try {
-    const data = await getUserHistory();
+    const token = req.header("Authorization");
+    const data = await getUserHistory(token);
     res.send(data);
   } catch (error) {
-    res.sendStatus(500) && next(error);
+    if (!error.status) {
+      error.status = 500;
+    }
+    next(error);
   }
 };
 
+//Controller for post new order to user order hisoty
 const postHistory = async (req, res, next) => {
   try {
-    const data = await postUserHistory();
-    res.send(data);
+    const token = req.header("Authorization");
+    const data = await postUserHistory(req.body, token);
+    res.json(data);
   } catch (error) {
-    res.sendStatus(500) && next(error);
+    if (!error.status) {
+      error.status = 500;
+    }
+    next(error);
   }
 };
 

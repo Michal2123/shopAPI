@@ -1,12 +1,32 @@
-const putUserDetails = require("../service/user-service");
+const { getUserDetails, patchUserDetails } = require("../service/user-service");
 
-const putUser = (req, res, next) => {
+//Controller for patch user account details
+const patchUser = async (req, res, next) => {
   try {
-    const data = putUserDetails();
-    res.send(data);
+    const data = req.body;
+    const token = req.header("Authorization");
+    await patchUserDetails(data, token);
+    res.sendStatus(200);
   } catch (error) {
-    res.sendStatus(500) && next(error);
+    if (!error.status) {
+      error.status = 500;
+    }
+    next(error);
   }
 };
 
-module.exports = putUser;
+//Controller for get user account details
+const getUser = async (req, res, next) => {
+  try {
+    const token = req.header("Authorization");
+    const data = await getUserDetails(token);
+    res.json(data);
+  } catch (error) {
+    if (!error.status) {
+      error.status = 500;
+    }
+    next(error);
+  }
+};
+
+module.exports = { getUser, patchUser };

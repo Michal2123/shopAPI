@@ -1,8 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const putUser = require("../controllers/user-controller");
+const { getUser, patchUser } = require("../controllers/user-controller");
 const veryfiToken = require("../middleware/veryfi-token");
+const { patchUserJSONVerify } = require("../middleware/veryfi-json");
 
-router.put("/:id", veryfiToken, putUser);
+//Route for update user data, shipping details, email and password
+router.patch("/", veryfiToken, patchUserJSONVerify, patchUser);
+
+//Route for get user shipping details data
+router.get("/", veryfiToken, getUser);
 
 module.exports = router;
