@@ -8,44 +8,63 @@ const patchUserSchema = {
   anyOf: [
     {
       required: ["firstName", "lastName", "city", "zipCode", "address"],
-      properties: {
-        firstName: {
-          type: "string",
-        },
-        lastName: {
-          type: "string",
-        },
-        city: {
-          type: "string",
-        },
-        zipCode: {
-          type: "string",
-        },
-        address: {
-          type: "string",
-        },
-        additionalProperties: false,
-      },
+      propertyNames: { not: { enum: ["email", "password"] } },
     },
     {
       required: ["email"],
-      properties: {
-        email: {
-          type: "string",
+      propertyNames: {
+        not: {
+          enum: [
+            "password",
+            "firstName",
+            "lastName",
+            "city",
+            "zipCode",
+            "address",
+          ],
         },
-        additionalProperties: false,
       },
     },
     {
       required: ["password"],
-      properties: {
-        password: {
-          type: "string",
+      propertyNames: {
+        not: {
+          enum: [
+            "email",
+            "firstName",
+            "lastName",
+            "city",
+            "zipCode",
+            "address",
+          ],
         },
-        additionalProperties: false,
       },
     },
   ],
+  properties: {
+    email: {
+      type: "string",
+    },
+    password: {
+      type: "string",
+    },
+    firstName: {
+      type: "string",
+    },
+    lastName: {
+      type: "string",
+    },
+    city: {
+      type: "string",
+    },
+    zipCode: {
+      type: "string",
+    },
+    address: {
+      type: "string",
+    },
+    additionalProperties: false,
+  },
 };
 
 const patchUserJSONValidation = ajv.compile(patchUserSchema);

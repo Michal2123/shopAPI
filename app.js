@@ -6,7 +6,6 @@ const authRoute = require("./routes/auth");
 const historyRoute = require("./routes/history");
 const productRoute = require("./routes/products");
 const userRoute = require("./routes/user");
-const { port } = require("./config");
 
 const errorHandler = require("./middleware/error-handler");
 
@@ -36,6 +35,4 @@ app.use((req, res, next) => {
 
 app.use(errorHandler);
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+module.exports = app;

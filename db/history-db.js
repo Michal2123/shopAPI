@@ -4,7 +4,7 @@ const request = require("./sql-connection");
 const selectHistoryDB = (userId) => {
   return new Promise((resolve, reject) => {
     request.query(
-      `SELECT date, userOrder FROM history WHERE userId='${userId}'`,
+      `SELECT id, date, userOrder FROM history WHERE userId='${userId}'`,
       (err, recordset) => {
         if (err) {
           reject(err);
