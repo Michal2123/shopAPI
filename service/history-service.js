@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const createError = require("http-errors");
 const { insertHistoryDB, selectHistoryDB } = require("../db/history-db");
 
 const getUserHistory = async (token) => {
@@ -6,7 +7,15 @@ const getUserHistory = async (token) => {
     const decodedToken = jwt.decode(token);
     const userId = decodedToken.userId;
     const data = await selectHistoryDB(userId);
-    return data;
+    const newData = data.map((item) => {
+      const encoded = JSON.parse(item.userOrder);
+      return {
+        id: item.id,
+        date: item.date,
+        orderList: encoded,
+      };
+    });
+    return newData;
   } catch (error) {
     throw error;
   }
@@ -14,6 +23,9 @@ const getUserHistory = async (token) => {
 
 const postUserHistory = async (data, token) => {
   try {
+    if (!Object.keys(data).length) {
+      throw createError(400);
+    }
     const decodedToken = jwt.decode(token);
     const userId = decodedToken.userId;
     return await insertHistoryDB(data, userId);
