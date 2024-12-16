@@ -1,12 +1,20 @@
-const request = require("./sql-connection");
+const pool = require("./postgersql-connection");
 
 //Data access for update user shipping detalis
 const updateUserShippingDataDB = (data, userId) => {
   return new Promise((resolve, reject) => {
-    request.query(
+    pool.query(
       `UPDATE users
-        SET firstName ='${data.firstName}', lastName ='${data.lastName}', city ='${data.city}', zipCode ='${data.zipCode}', address ='${data.address},'
-        WHERE userId='${userId}'`,
+        SET first_name = $1, last_name = $2, city = $3, zip_code = $4, address = $5
+        WHERE user_id= $6`,
+      [
+        data.firstName,
+        data.lastName,
+        data.city,
+        data.zipCode,
+        data.address,
+        userId,
+      ],
       (err) => {
         if (err) {
           reject(err);
@@ -20,56 +28,21 @@ const updateUserShippingDataDB = (data, userId) => {
 //Data access for select user shipping details
 const selectUserDB = (userId) => {
   return new Promise((resolve, reject) => {
-    request.query(
-      `SELECT firstName, lastName, city, zipCode, address FROM users
-            WHERE userId='${userId}'`,
-      (err, recordsets) => {
+    pool.query(
+      `SELECT first_name, last_name, city, zip_code, address FROM users
+            WHERE user_id=$1`,
+      [userId],
+      (err, result) => {
         if (err) {
           reject(err);
         }
-        resolve(recordsets.recordset[0]);
-      }
-    );
-  });
-};
-
-//Data access for update user email/login
-const updateUserLoginDB = (email, userId) => {
-  return new Promise((resolve, reject) => {
-    request.query(
-      `UPDATE auth
-        SET login ='${email}'
-        WHERE id='${userId}'`,
-      (err) => {
-        if (err) {
-          reject(err);
-        }
-        resolve();
-      }
-    );
-  });
-};
-
-//Data access for update user password
-const updateUserPasswordDB = (password, userId) => {
-  return new Promise((resolve, reject) => {
-    request.query(
-      `UPDATE auth
-        SET password ='${password}'
-        WHERE id='${userId}'`,
-      (err) => {
-        if (err) {
-          reject(err);
-        }
-        resolve();
+        resolve(result.rows[0]);
       }
     );
   });
 };
 
 module.exports = {
-  updateUserLoginDB,
-  updateUserPasswordDB,
   updateUserShippingDataDB,
   selectUserDB,
 };

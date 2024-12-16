@@ -8,7 +8,7 @@ const getUserHistory = async (token) => {
     const userId = decodedToken.userId;
     const data = await selectHistoryDB(userId);
     const newData = data.map((item) => {
-      const encoded = JSON.parse(item.userOrder);
+      const encoded = JSON.parse(item.user_order);
       return {
         id: item.id,
         date: item.date,

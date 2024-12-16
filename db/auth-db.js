@@ -1,38 +1,41 @@
-const request = require("./sql-connection");
+const pool = require("./postgersql-connection");
 const { v1: uuidv1 } = require("uuid");
 
 //Data access for register new user
-const registerUserDB = (data) => {
+const registerUserDB = async (data) => {
   const id = uuidv1();
-  return new Promise((resolve, reject) => {
-    request.query(
-      `BEGIN TRANSACTION
-      INSERT INTO auth VALUES ('${id}','${data.email}','${data.password}');
-      INSERT INTO users VALUES ('${id}','${data.firstName}','${data.lastName}','${data.city}','${data.zipCode}','${data.address}');
-      COMMIT`,
-      (err, __) => {
-        if (err) {
-          console.log(err);
-          reject(err);
-        }
-        resolve(id);
-      }
-    );
-  });
+  try {
+    await pool.query("BEGIN");
+    await pool.query("INSERT INTO auth VALUES ($1,$2,$3)", [
+      id,
+      data.email,
+      data.password,
+    ]);
+    await pool.query("INSERT INTO users VALUES ($1,$2,$3,$4,$5,$6)", [
+      id,
+      data.firstName,
+      data.lastName,
+      data.city,
+      data.zipCode,
+      data.address,
+    ]);
+    await pool.query("COMMIT");
+    return id;
+  } catch (error) {
+    await pool.query("ROLLBACK");
+    throw error;
+  }
 };
 
 //Data access for login user
 const loginUserDB = (email) => {
   return new Promise((resolve, reject) => {
-    request.query(
-      `SELECT * FROM auth WHERE login='${email}'`,
-      (err, recordset) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(recordset.recordset[0]);
+    pool.query(`SELECT * FROM auth WHERE login=$1`, [email], (err, result) => {
+      if (err) {
+        reject(err);
       }
-    );
+      resolve(result.rows[0]);
+    });
   });
 };
 

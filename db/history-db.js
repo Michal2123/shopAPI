@@ -1,15 +1,16 @@
-const request = require("./sql-connection");
+const pool = require("./postgersql-connection");
 
 //Data access for select all user order history
 const selectHistoryDB = (userId) => {
   return new Promise((resolve, reject) => {
-    request.query(
-      `SELECT id, date, userOrder FROM history WHERE userId='${userId}'`,
-      (err, recordset) => {
+    pool.query(
+      "SELECT id, date, user_order FROM history WHERE user_id=$1",
+      [userId],
+      (err, result) => {
         if (err) {
           reject(err);
         }
-        resolve(recordset.recordset);
+        resolve(result.rows);
       }
     );
   });
@@ -18,16 +19,17 @@ const selectHistoryDB = (userId) => {
 //Data access for inser new order to user order history
 const insertHistoryDB = (data, userId) => {
   const { date, orderList } = data;
+  const jsonOrder = JSON.stringify(orderList);
   return new Promise((resolve, reject) => {
-    request.query(
-      `INSERT INTO history OUTPUT Inserted.ID VALUES ('${userId}', '${date}', '${JSON.stringify(
-        orderList
-      )}')`,
-      (err, recordset) => {
+    pool.query(
+      `INSERT INTO history (user_id, date, user_order) VALUES ($1, $2, $3) RETURNING id`,
+      [userId, date, jsonOrder],
+      (err, result) => {
         if (err) {
           reject(err);
         }
-        resolve({ id: recordset.recordset[0].ID, userId, orderList, date });
+        const id = result.rows[0].id;
+        resolve({ id, userId, orderList, date });
       }
     );
   });

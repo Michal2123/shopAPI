@@ -1,13 +1,13 @@
-const request = require("./sql-connection");
+const pool = require("./postgersql-connection");
 
 //Data access for select all products
 const selectProductsDB = () => {
   return new Promise((resolve, reject) => {
-    request.query("SELECT * FROM products", (err, recordsets) => {
+    pool.query("SELECT * FROM products", (err, result) => {
       if (err) {
         reject(err);
       }
-      resolve(recordsets.recordset);
+      resolve(result.rows);
     });
   });
 };

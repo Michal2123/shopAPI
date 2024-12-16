@@ -10,7 +10,7 @@ selectHistoryDB.mockResolvedValue([
   {
     id: 1,
     date: "1/11/2024 14:6",
-    userOrder:
+    user_order:
       '[{"productId":30,"count":2},{"productId":31,"count":2},{"productId":33,"count":2}]',
   },
 ]);
