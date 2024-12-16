@@ -22,11 +22,14 @@ const registerUser = async (data) => {
 const loginUser = async (data) => {
   try {
     const { email, password } = data;
-    const recordset = await loginUserDB(email);
-    if (!recordset || password !== decryptData(recordset.password)) {
+    const result = await loginUserDB(email);
+    if (!result) {
       throw createError(401);
     }
-    const token = createToken(recordset.id);
+    if (password !== decryptData(result.password)) {
+      throw createError(401);
+    }
+    const token = createToken(result.id);
     const user = await getUserDetails(token);
     const fullUser = { ...user, email };
     return { accessToken: token, user: fullUser };

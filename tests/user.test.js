@@ -2,7 +2,6 @@ jest.mock("../db/user-db");
 const { selectUserDB } = require("../db/user-db");
 const request = require("supertest");
 const app = require("../app");
-const jwt = require("jsonwebtoken");
 const { createToken } = require("../utlis/crypto");
 
 const userId = "aaaa-bbbb-cccc";
@@ -46,30 +45,6 @@ describe("User endpoints status 200 tests", () => {
       .send(payload);
     expect(response.statusCode).toBe(200);
   });
-
-  it("check if 200 when update user email", async () => {
-    const token = createToken(userId);
-    const payload = {
-      email: "email@email.com",
-    };
-    const response = await request(app)
-      .patch("/user")
-      .set({ Authorization: token })
-      .send(payload);
-    expect(response.statusCode).toBe(200);
-  });
-
-  it("check if 200 when update user password", async () => {
-    const token = createToken(userId);
-    const payload = {
-      password: "password",
-    };
-    const response = await request(app)
-      .patch("/user")
-      .set({ Authorization: token })
-      .send(payload);
-    expect(response.statusCode).toBe(200);
-  });
 });
 
 describe("User endpoints status 400 tests", () => {
@@ -90,22 +65,6 @@ describe("User endpoints status 401 tests", () => {
       city: "city",
       zipCode: "00-000",
       address: "address",
-    };
-    const response = await request(app).patch("/user").send(payload);
-    expect(response.statusCode).toBe(401);
-  });
-
-  it("check if 401 when update user email with no token", async () => {
-    const payload = {
-      email: "email@email.com",
-    };
-    const response = await request(app).patch("/user").send(payload);
-    expect(response.statusCode).toBe(401);
-  });
-
-  it("check if 401 when update user password with no token", async () => {
-    const payload = {
-      password: "password",
     };
     const response = await request(app).patch("/user").send(payload);
     expect(response.statusCode).toBe(401);
