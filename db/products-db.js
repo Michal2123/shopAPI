@@ -4,10 +4,10 @@ const pool = require("./postgersql-connection");
 const selectProductsDB = () => {
   return new Promise((resolve, reject) => {
     pool.query("SELECT * FROM products", (err, result) => {
-      if (err) {
-        reject(err);
+      if (result) {
+        resolve(result.rows);
       }
-      resolve(result.rows);
+      reject(err);
     });
   });
 };

@@ -8,6 +8,7 @@ const pool = new Pool({
   port: dbport,
   password: password,
   user: user,
+  ssl: { rejectUnauthorized: false },
 });
 
 pool.on("error", (err) => {
