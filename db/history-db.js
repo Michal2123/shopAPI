@@ -7,10 +7,10 @@ const selectHistoryDB = (userId) => {
       "SELECT id, date, user_order FROM history WHERE user_id=$1",
       [userId],
       (err, result) => {
-        if (err) {
-          reject(err);
+        if (result) {
+          resolve(result.rows);
         }
-        resolve(result.rows);
+        reject(err);
       }
     );
   });
@@ -25,11 +25,11 @@ const insertHistoryDB = (data, userId) => {
       `INSERT INTO history (user_id, date, user_order) VALUES ($1, $2, $3) RETURNING id`,
       [userId, date, jsonOrder],
       (err, result) => {
-        if (err) {
-          reject(err);
+        if (result) {
+          const id = result.rows[0].id;
+          resolve({ id, userId, orderList, date });
         }
-        const id = result.rows[0].id;
-        resolve({ id, userId, orderList, date });
+        reject(err);
       }
     );
   });

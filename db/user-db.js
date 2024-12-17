@@ -33,10 +33,10 @@ const selectUserDB = (userId) => {
             WHERE user_id=$1`,
       [userId],
       (err, result) => {
-        if (err) {
-          reject(err);
+        if (result) {
+          resolve(result.rows[0]);
         }
-        resolve(result.rows[0]);
+        reject(err);
       }
     );
   });

@@ -31,10 +31,10 @@ const registerUserDB = async (data) => {
 const loginUserDB = (email) => {
   return new Promise((resolve, reject) => {
     pool.query(`SELECT * FROM auth WHERE login=$1`, [email], (err, result) => {
-      if (err) {
-        reject(err);
+      if (result) {
+        resolve(result.rows[0]);
       }
-      resolve(result.rows[0]);
+      reject(err);
     });
   });
 };
