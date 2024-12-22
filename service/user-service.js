@@ -16,7 +16,13 @@ const getUserDetails = async (token) => {
     const decodedToken = jwt.decode(token);
     const userId = decodedToken.userId;
     const data = await selectUserDB(userId);
-    return data;
+    return {
+      firstName: data.first_name,
+      lastName: data.last_name,
+      city: data.city,
+      zipCode: data.zip_code,
+      address: data.address,
+    };
   } catch (error) {
     throw error;
   }
